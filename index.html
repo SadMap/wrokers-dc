@@ -49,7 +49,7 @@
             const destination = document.querySelector("input[name='destination']").value;
             const imageurl = document.querySelector("input[name='imageurl']").value;
             const secret = document.querySelector("input[name='secret']").value;
-            fetch("https://akp.bar/api/shorten", {
+            fetch("https://api.akp.bar/shorten", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
