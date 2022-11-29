@@ -39,7 +39,7 @@ export default {
 			})
 		}
 		// API 
-		if (subdomain === "api") {
+		if (subdomain === "apk") {
 			// Redirect Creation api
 			if (path === "/shorten" && request.method === "POST") {
 				const body = (await request.json()) as {
