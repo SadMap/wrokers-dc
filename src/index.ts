@@ -30,12 +30,18 @@ export default {
 		const path = new URL(request.url).pathname
 		if (subdomain === "www" || subdomain === "akp" && path === "/") {
 			const html = await fetch("https://raw.githubusercontent.com/SadMap/wrokers-dc/main/index.html")
-			return html
+			return new Response(html.body, {
+				status: 200,
+				headers: {
+					"content-type": "text/html;charset=UTF-8",
+					"allow-origin": "*",
+				},
+			})
 		}
 		// API 
 		if (subdomain === "api") {
 			// Redirect Creation api
-			if (path === "/create" && request.method === "POST") {
+			if (path === "/shorten" && request.method === "POST") {
 				const body = (await request.json()) as {
 					subdomain: string | undefined,
 					url: string | undefined,
@@ -102,6 +108,17 @@ export default {
 				await env.redirects.delete(`${subdomain}/${url}.png`)
 				return new Response(`Successfully deleted redirect for ${subdomain}.akp.bar/${url}`, {
 					status: 200
+				})
+			}
+			// Cors
+			if (path === "/shorten" || path === "delete" && request.method === "OPTIONS") {
+				return new Response("OK", {
+					status: 200,
+					headers: {
+						"access-control-allow-origin": "*",
+						"access-control-allow-methods": "POST,OPTIONS",
+						"access-control-allow-headers": "content-type"
+					}
 				})
 			}
 		}

@@ -52,7 +52,8 @@
             fetch("https://api.akp.bar/shorten", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "no-cors": true
                 },
                 body: JSON.stringify({
                     subdomain,
