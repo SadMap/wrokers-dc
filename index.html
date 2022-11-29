@@ -43,13 +43,13 @@
     </div>
     <script>
         const submit = document.getElementById("submit");
-        submit.addEventListener("click", () => {
+        submit.addEventListener("click",async () => {
             const subdomain = document.querySelector("input[name='subdomain']").value;
             const url = document.querySelector("input[name='url']").value;
             const destination = document.querySelector("input[name='destination']").value;
             const imageurl = document.querySelector("input[name='imageurl']").value;
             const secret = document.querySelector("input[name='secret']").value;
-            fetch("https://api.akp.bar/shorten", {
+            const res = await fetch("https://api.akp.bar/shorten", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -61,11 +61,11 @@
                     imageurl,
                     secret
                 })
-            }).then(res => res.json()).then(data => {
-                if (data.error) {
+            })
+                if (!res.ok) {
                     // show error
                     const error = document.createElement("p");
-                    error.innerText = data.error;
+                    error.innerText = await res.text();
                     error.style.color = "red";
                     error.style.fontWeight = "bold";
                     error.style.fontSize = "1.5rem";
@@ -76,7 +76,7 @@
                 } else {
                     // show success
                     const success = document.createElement("p");
-                    success.innerText = data.shortened;
+                    success.innerText = await res.text();
                     success.style.color = "green";
                     success.style.fontWeight = "bold";
                     success.style.fontSize = "1.5rem";
@@ -86,7 +86,6 @@
                     document.querySelector(".container").appendChild(success);
                 }
             });
-        });
     </script>
 </body>
 </html>
