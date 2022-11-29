@@ -34,7 +34,7 @@ export default {
 				status: 200,
 				headers: {
 					"content-type": "text/html;charset=UTF-8",
-					"allow-origin": "*",
+					"Access-Control-Allow-Origin": "*",
 				},
 			})
 		}
@@ -62,7 +62,7 @@ export default {
 						status: 400,
 						headers: {
 							"content-type": "text/plain;charset=UTF-8",
-							"allow-origin": "*",
+							"Access-Control-Allow-Origin": "*",
 						},
 					})
 				}
@@ -73,7 +73,7 @@ export default {
 						status: 401,
 						headers: {
 							"content-type": "text/plain;charset=UTF-8",
-							"allow-origin": "*",
+							"Access-Control-Allow-Origin": "*",
 						},
 					})
 				}
@@ -88,7 +88,7 @@ export default {
 					status: 200,
 					headers: {
 						"content-type": "text/plain;charset=UTF-8",
-						"allow-origin": "*",
+						"Access-Control-Allow-Origin": "*",
 					},
 				})
 			}
@@ -127,7 +127,7 @@ export default {
 				return new Response("OK", {
 					status: 200,
 					headers: {
-						"Access-Control-Allow-Origin": "https://akp.bar",
+						"Access-Control-Access-Control-Allow-Origin": "https://akp.bar",
 						"Access-Control-Allow-Methods": "POST,OPTIONS",
 						"Access-Control-Allow-Headers": "Content-Type"
 					}
