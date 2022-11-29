@@ -44,7 +44,9 @@
     <script>
         const submit = document.getElementById("submit");
         submit.addEventListener("click",async () => {
-            document.getElementById(".container").removeChild(document.getElementById("msg"));
+            if (document.getElementById("msg")) {
+                document.getElementById("msg").remove();
+            }
             const subdomain = document.querySelector("input[name='subdomain']").value;
             const url = document.querySelector("input[name='url']").value;
             const destination = document.querySelector("input[name='destination']").value;
