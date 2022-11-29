@@ -59,14 +59,22 @@ export default {
 				}
 				if (!destination) {
 					return new Response("Destination is required", {
-						status: 400
+						status: 400,
+						headers: {
+							"content-type": "text/plain;charset=UTF-8",
+							"allow-origin": "*",
+						},
 					})
 				}
 				// Check if secret is correct
 				const secretKey = await env.redirects.get(`${subdomain}-secret`)
 				if (secretKey !== secret) {
 					return new Response("Secret is incorrect", {
-						status: 401
+						status: 401,
+						headers: {
+							"content-type": "text/plain;charset=UTF-8",
+							"allow-origin": "*",
+						},
 					})
 				}
 				if (!secretKey) {
@@ -77,7 +85,11 @@ export default {
 					await env.redirects.put(`${subdomain}/${url}.png`, imageurl)
 				}
 				return new Response(`Successfully created redirect for ${subdomain}.akp.bar/${url}`, {
-					status: 200
+					status: 200,
+					headers: {
+						"content-type": "text/plain;charset=UTF-8",
+						"allow-origin": "*",
+					},
 				})
 			}
 			// Redirect Deletion api
@@ -115,7 +127,9 @@ export default {
 				return new Response("OK", {
 					status: 200,
 					headers: {
-						"access-control-allow-origin": "*",
+						"Access-Control-Allow-Origin": "https://akp.bar",
+						"Access-Control-Allow-Methods": "POST,OPTIONS",
+						"Access-Control-Allow-Headers": "Content-Type"
 					}
 				})
 			}
