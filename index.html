@@ -44,6 +44,7 @@
     <script>
         const submit = document.getElementById("submit");
         submit.addEventListener("click",async () => {
+            document.getElementById(".container").removeChild(document.getElementById("msg"));
             const subdomain = document.querySelector("input[name='subdomain']").value;
             const url = document.querySelector("input[name='url']").value;
             const destination = document.querySelector("input[name='destination']").value;
@@ -68,6 +69,7 @@
                 if (!res.ok) {
                     // show error
                     const error = document.createElement("p");
+                    error.id = "msg"
                     error.innerText = text
                     error.style.color = "red";
                     error.style.fontWeight = "bold";
@@ -79,6 +81,7 @@
                 } else {
                     // show success
                     const success = document.createElement("p");
+                    success.id = "msg"
                     success.innerText = text
                     success.style.color = "green";
                     success.style.fontWeight = "bold";
