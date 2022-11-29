@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        body {
+            background-color: aquamarine;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container > :first-child {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+    </style>
+    <div class="container">
+        <h1>Akp.bar url shortner</h1>
+            <div>
+            <input type="text" name="subdomain" placeholder="Enter your Subdomain">/
+            <input type="text" name="url" placeholder="Enter your url">
+            </div>
+            <div>
+            <input type="text" name="destination" placeholder="Enter your destination">
+            <input type="text" name="imageurl" placeholder="Enter your image url">
+            </div>
+            <div>
+                <input type="password" name="secret" placeholder="Enter your secret">
+            </div>
+            <div>
+                <button id="submit">Shorten</button>
+            </div>
+    </div>
+    <script>
+        const submit = document.getElementById("submit");
+        submit.addEventListener("click", () => {
+            const subdomain = document.querySelector("input[name='subdomain']").value;
+            const url = document.querySelector("input[name='url']").value;
+            const destination = document.querySelector("input[name='destination']").value;
+            const imageurl = document.querySelector("input[name='imageurl']").value;
+            const secret = document.querySelector("input[name='secret']").value;
+            fetch("https://akp.bar/api/shorten", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    subdomain,
+                    url,
+                    destination,
+                    imageurl,
+                    secret
+                })
+            }).then(res => res.json()).then(data => {
+                if (data.error) {
+                    // show error
+                    const error = document.createElement("p");
+                    error.innerText = data.error;
+                    error.style.color = "red";
+                    error.style.fontWeight = "bold";
+                    error.style.fontSize = "1.5rem";
+                    error.style.marginTop = "1rem";
+                    error.style.textAlign = "center";
+                    error.style.backgroundColor = "white";
+                    document.querySelector(".container").appendChild(error);
+                } else {
+                    // show success
+                    const success = document.createElement("p");
+                    success.innerText = data.shortened;
+                    success.style.color = "green";
+                    success.style.fontWeight = "bold";
+                    success.style.fontSize = "1.5rem";
+                    success.style.marginTop = "1rem";
+                    success.style.textAlign = "center";
+                    success.style.backgroundColor = "white";
+                    document.querySelector(".container").appendChild(success);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
