@@ -64,12 +64,12 @@
                 })
             })
                 console.log(res)
-                const text = await res.text();
+                const text = await res.body.getReader().read();
                 console.log(text)
                 if (!res.ok) {
                     // show error
                     const error = document.createElement("p");
-                    error.innerText = text
+                    error.innerText = text.value.toString()
                     error.style.color = "red";
                     error.style.fontWeight = "bold";
                     error.style.fontSize = "1.5rem";
