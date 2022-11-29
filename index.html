@@ -50,6 +50,7 @@
             const imageurl = document.querySelector("input[name='imageurl']").value;
             const secret = document.querySelector("input[name='secret']").value;
             const res = await fetch("https://api.akp.bar/shorten", {
+                mode:"no-cors",
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
