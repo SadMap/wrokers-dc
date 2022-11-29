@@ -7,7 +7,6 @@
  *
  * Learn more at https://developers.cloudflare.com/workers/
  */
-
 export interface Env {
 	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
 	redirects: KVNamespace;
@@ -26,9 +25,86 @@ export default {
 		ctx: ExecutionContext
 	): Promise<Response> {
 		// Get subdomain from request
-		const subdomain = request.headers.get('host')?.split('.')[0];
+		const subdomain = new URL(request.url).hostname.split('.')[0]
 		// Get path from request
-		const path = new URL(request.url).pathname;
+		const path = new URL(request.url).pathname
+		if (subdomain === "www" || subdomain === "akp" && path === "/") {
+			const html = await fetch("https://raw.githubusercontent.com/SadMap/wrokers-dc/main/index.html")
+			return html
+		}
+		// API 
+		if (subdomain === "api") {
+			// Redirect Creation api
+			if (path === "/create" && request.method === "POST") {
+				const body = (await request.json()) as {
+					subdomain: string | undefined,
+					url: string | undefined,
+					destination: string | undefined,
+					imageurl: string | undefined,
+					secret: string | undefined
+				}
+				const {destination,imageurl,secret} = body 
+				let {subdomain,url} = body
+				if (!subdomain) {
+					subdomain = "akp"
+				}
+				if (!url) {
+					url = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+				}
+				if (!destination) {
+					return new Response("Destination is required", {
+						status: 400
+					})
+				}
+				// Check if secret is correct
+				const secretKey = await env.redirects.get(`${subdomain}-secret`)
+				if (secretKey !== secret) {
+					return new Response("Secret is incorrect", {
+						status: 401
+					})
+				}
+				if (!secretKey) {
+					await env.redirects.put(`${subdomain}-secret`, secret)
+				}
+				await env.redirects.put(`${subdomain}/${url}`, destination)
+				if (imageurl) {
+					await env.redirects.put(`${subdomain}/${url}.png`, imageurl)
+				}
+				return new Response(`Successfully created redirect for ${subdomain}.akp.bar/${url}`, {
+					status: 200
+				})
+			}
+			// Redirect Deletion api
+			if (path === "/delete" && request.method === "POST") {
+				const body = (await request.json()) as {
+					subdomain: string | undefined,
+					url: string | undefined,
+					secret: string | undefined
+				}
+				const {secret} = body
+				let {subdomain,url} = body
+				if (!subdomain) {
+					subdomain = "akp"
+				}
+				if (!url) {
+					return new Response("URL is required", {
+						status: 400
+					})
+				}
+				// Check if secret is correct
+				const secretKey = await env.redirects.get(`${subdomain}-secret`)
+				if (secretKey !== secret) {
+					return new Response("Secret is incorrect", {
+						status: 401
+					})
+				}
+				await env.redirects.delete(`${subdomain}/${url}`)
+				await env.redirects.delete(`${subdomain}/${url}.png`)
+				return new Response(`Successfully deleted redirect for ${subdomain}.akp.bar/${url}`, {
+					status: 200
+				})
+			}
+		}
 		// Get value from KV
 		const value = await env.redirects.get(`${subdomain ?? ""}${path}`);
 		// Check if user agent is a bot
@@ -36,8 +112,14 @@ export default {
 		// Check if value exists
 		if (value && !isBot) {
 			// Redirect to value
-			return Response
-				.redirect(value, 301);
+			console.log(value)
+			return new Response(`<meta http-equiv="refresh" content="0; URL='${value}'" />`, {
+				status: 302,
+				headers: {
+					'Location': value,
+					},
+					});
+
 		} else if (isBot) {
 			const image = await env.redirects.get(`${subdomain ?? ""}${path}.png`);
 			if (image) {
@@ -58,7 +140,7 @@ export default {
 					})
 			}
 		}
-			return new Response('Not found', {
+			return new Response(`Not Found ${subdomain??""}${path}`, {
 				status: 404
 			});
 	},

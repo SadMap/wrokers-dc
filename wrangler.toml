@@ -4,3 +4,4 @@ compatibility_date = "2022-11-28"
 kv_namespaces = [
     { binding = "redirects", id="df4108f09a6b46fca65843cfe0f70da3", preview_id="ae5232aefd4248859037c25e38fb0650"}
 ]
+node_compat = false
